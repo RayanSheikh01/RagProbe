@@ -1,4 +1,5 @@
 
+from judge import judge_entailment
 from models import Probe, RunResult, Score
 
 def score_retrieval(rr: RunResult, k: int = 5) -> Score:
@@ -42,4 +43,23 @@ def score_correctness(rr, probe: Probe) -> Score:
     )
     
     
+def score_groundedness(rr, judge__llm_fn) -> Score:
+    answer = rr.retrieval.answer
+    contexts = rr.retrieval.retrieved_contexts
     
+    result = judge_entailment(answer, contexts, judge__llm_fn)
+    
+    value = 1.0 if result["grounded"] else 0.0
+    passed = result["grounded"]
+    detail = {
+        "rationale": result.get("rationale", ""),
+        "supporting_idx": result.get("supporting_idx", [])
+    }
+    
+    return Score(
+        probe_id=rr.probe_id,
+        scorer="groundedness",
+        value=value,
+        passed=passed,
+        detail=detail
+    )
