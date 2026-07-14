@@ -1,5 +1,5 @@
 
-from models import RunResult, Score
+from models import Probe, RunResult, Score
 
 def score_retrieval(rr: RunResult, k: int = 5) -> Score:
     
@@ -23,4 +23,23 @@ def score_retrieval(rr: RunResult, k: int = 5) -> Score:
         passed=passed,
         detail=detail
     )
+    
+def score_correctness(rr, probe: Probe) -> Score:
+    answer = rr.retrieval.answer
+    expected = probe.expected_answer
+    
+    passed = answer.strip().lower() == expected.strip().lower()
+    value = 1.0 if passed else 0.0
+    detail = {"expected": expected, "actual": answer}
+    
+    return Score(
+        probe_id=rr.probe_id,
+        scorer="correctness",
+        value=value,
+        passed=passed,
+        detail=detail
+    
+    )
+    
+    
     
