@@ -7,9 +7,9 @@ def main():
     from runner import run
     from scorers import score_retrieval, score_correctness, score_groundedness
     from report import build_report, render_markdown
-
+    
     parser = argparse.ArgumentParser(description="Run probes against a SUT and generate a report.")
-    parser.add_argument("probes_file", type=Path, help="Path to the probes YAML file.")
+    parser.add_argument("probes_file", type=Path, help="Path to the probes YAML file.") 
     parser.add_argument("--docs", type=Path, required=True, help="Path to the directory containing documents to index.")
     parser.add_argument("--top-k", type=int, default=5, help="Number of top documents to retrieve.")
     parser.add_argument("--no-judge", action="store_true", help="Skip groundedness scoring.")
